@@ -72,7 +72,9 @@ The default launcher is a round SF Symbol button. `ChatbotView` can also be embe
 
 ## Documentation
 
-Build the package's DocC archive in Xcode for complete guides covering model providers, arbitrary application knowledge, errors and recovery, styling, persistence, localization, privacy, and integration best practices. Every public declaration includes English DocC comments, parameter descriptions, behavior, errors, tips, and sample usage where applicable.
+Read the complete [GenericChatbot documentation](https://erikote04.github.io/ios-generic-chatbot/documentation/genericchatbot/) for guides covering model providers, arbitrary application knowledge, errors and recovery, styling, persistence, localization, privacy, and integration best practices.
+
+You can also build the package's DocC archive locally in Xcode. Every public declaration includes English DocC comments with parameter descriptions, behavior, errors, tips, and sample usage where applicable.
 
 ## Privacy
 
