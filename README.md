@@ -2,6 +2,52 @@
 
 `GenericChatbot` is a domain-neutral SwiftUI chatbot component for iOS 26 and later. It ships with an Apple Foundation Models provider and protocol-based extension points for any local or remote model, application knowledge source, history store, diagnostics destination, and visual style.
 
+## Requirements
+
+- iOS 26+
+- Xcode 26+
+- Swift 6.2+
+
+Apple's provider requires an Apple Intelligence-capable device with Apple Intelligence enabled and model assets ready. Remote providers and knowledge sources may additionally require connectivity.
+
+## Installation
+
+### Xcode
+
+1. In Xcode, select **File > Add Package Dependencies**.
+2. Enter `https://github.com/Erikote04/ios-generic-chatbot.git`.
+3. Select **Up to Next Major Version** and choose the latest release.
+4. Add the `GenericChatbot` product to your application target.
+
+### Package.swift
+
+Add GenericChatbot to your package dependencies and application target:
+
+```swift
+dependencies: [
+    .package(
+        url: "https://github.com/Erikote04/ios-generic-chatbot.git",
+        from: "1.0.0"
+    )
+],
+targets: [
+    .target(
+        name: "YourApp",
+        dependencies: [
+            .product(name: "GenericChatbot", package: "ios-generic-chatbot")
+        ]
+    )
+]
+```
+
+Then import the library where you want to use it:
+
+```swift
+import GenericChatbot
+```
+
+## Quick start
+
 ```swift
 import GenericChatbot
 import SwiftUI
@@ -23,14 +69,6 @@ struct AssistantButton: View {
 ```
 
 The default launcher is a round SF Symbol button. `ChatbotView` can also be embedded directly, and `ChatbotStyle` allows every visual slot to be replaced without moving model or persistence behavior into the UI.
-
-## Requirements
-
-- iOS 26+
-- Xcode 26+
-- Swift 6.2+
-
-Apple's provider requires an Apple Intelligence-capable device with Apple Intelligence enabled and model assets ready. Remote providers and knowledge sources may additionally require connectivity.
 
 ## Documentation
 
