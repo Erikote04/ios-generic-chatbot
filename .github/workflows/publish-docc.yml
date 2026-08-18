@@ -1,0 +1,64 @@
+name: Deploy DocC Documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-26
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Generate DocC static site
+        run: |
+          set -euo pipefail
+
+          xcodebuild docbuild \
+            -workspace .swiftpm/xcode/package.xcworkspace \
+            -scheme GenericChatbot \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath .build/docc \
+            CODE_SIGNING_ALLOWED=NO
+
+          archive_path="$(find .build/docc/Build/Products -type d -name 'GenericChatbot.doccarchive' -print -quit)"
+          test -n "$archive_path"
+
+          mkdir -p .docs
+          xcrun docc process-archive transform-for-static-hosting \
+            "$archive_path" \
+            --hosting-base-path "${{ github.event.repository.name }}" \
+            --output-path .docs
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: .docs
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
