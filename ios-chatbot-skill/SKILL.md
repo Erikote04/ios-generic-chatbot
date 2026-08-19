@@ -7,48 +7,70 @@ description: Integrate the GenericChatbot Swift package into existing iOS applic
 
 Integrate GenericChatbot at the host application's existing composition, navigation, state-management, and data boundaries. Preserve the app's architecture and conventions.
 
-## Installation guide
+## Install this skill
 
-GenericChatbot requires iOS 26 or later, Xcode 26 or later, and Swift 6.2 or later. Before changing application code, verify that the app target meets these requirements and does not already link the `GenericChatbot` product.
+This skill follows the [Agent Skills open format](https://agentskills.io/home) and can be used by compatible AI coding tools.
 
-### Install with Xcode
+### Option A: Using skills.sh (recommended)
 
-Use this approach for an app managed by an Xcode project or workspace:
+Install the skill directly from this repository:
 
-1. Open the project or workspace in Xcode.
-2. Select **File > Add Package Dependencies**.
-3. Enter `https://github.com/Erikote04/ios-generic-chatbot.git`.
-4. Select **Up to Next Major Version** starting at `1.0.0`, unless the project has a different package-version policy.
-5. Add the `GenericChatbot` product only to the target that owns the integration.
-6. Resolve packages and build that target to verify the dependency.
-
-### Install with Package.swift
-
-Add the package to `dependencies`:
-
-```swift
-.package(
-    url: "https://github.com/Erikote04/ios-generic-chatbot.git",
-    from: "1.0.0"
-)
+```bash
+npx skills add https://github.com/Erikote04/ios-generic-chatbot --skill ios-chatbot-skill
 ```
 
-Then link the product from the integrating target:
+Then ask your agent to use it, for example:
 
-```swift
-.product(
-    name: "GenericChatbot",
-    package: "ios-generic-chatbot"
-)
+> Use the ios-chatbot-skill to integrate GenericChatbot into this app while preserving its existing architecture.
+
+### Option B: Claude Code plugin
+
+The `.claude-plugin` metadata is included in this folder. Because the skill currently lives inside the main repository, clone the repository and add the skill folder as a local marketplace:
+
+```bash
+git clone https://github.com/Erikote04/ios-generic-chatbot.git
 ```
 
-Resolve dependencies, build the target, and import the module only where it is used:
+In Claude Code, add the marketplace using the absolute path to the cloned skill folder:
 
-```swift
-import GenericChatbot
+```text
+/plugin marketplace add /absolute/path/to/ios-generic-chatbot/ios-chatbot-skill
+/plugin install ios-chatbot-skill@erikote04-ios-skills
 ```
 
-For Tuist, XcodeGen, modular workspaces, and existing dependency conventions, update the project's source of truth rather than generated files. Follow the complete decision guide in [dependency-installation.md](reference/dependency-installation.md).
+To automatically provide the plugin to everyone working in a project, configure `.claude/settings.json` with the repository and skill subdirectory:
+
+```json
+{
+  "enabledPlugins": {
+    "ios-chatbot-skill@erikote04-ios-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "erikote04-ios-skills": {
+      "source": {
+        "source": "github",
+        "repo": "Erikote04/ios-generic-chatbot",
+        "path": "ios-chatbot-skill"
+      }
+    }
+  }
+}
+```
+
+### Option C: Manual installation
+
+1. Clone this repository.
+2. Copy or symlink the `ios-chatbot-skill` folder into your AI tool's skills directory.
+3. Restart or reload the tool if required.
+4. Ask the tool to use `ios-chatbot-skill` for a GenericChatbot integration task.
+
+Follow the installation documentation for your tool:
+
+- Codex: [Where to save skills](https://developers.openai.com/codex/skills/#where-to-save-skills)
+- Claude: [Using Agent Skills](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview#using-skills)
+- Cursor: [Enabling Skills](https://cursor.com/docs/context/skills#enabling-skills)
+
+Verify the installation by confirming that the agent loads this `SKILL.md` and the applicable files from `reference/` before it edits the application.
 
 ## Required workflow
 
