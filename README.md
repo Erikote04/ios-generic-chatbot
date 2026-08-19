@@ -72,7 +72,7 @@ The default launcher is a round SF Symbol button. `ChatbotView` can also be embe
 
 ## Response language
 
-By default, the assistant responds in the language of the person's latest message and follows language changes during the conversation. Short or ambiguous follow-ups continue in the person's most recently identifiable language, with the app locale as a fallback.
+By default, the assistant detects the language of each new message on device and follows language changes within the same conversation. Short or ambiguous follow-ups continue in the person's most recently identifiable language, including after restoring history, with the app locale as a fallback.
 
 Developers can instead keep responses in the app language or require a specific locale:
 

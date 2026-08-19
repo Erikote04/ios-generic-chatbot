@@ -44,7 +44,7 @@ struct AssistantEntryPoint: View {
 - Use `.general` when the model may answer from general capabilities and optionally prefer retrieved context.
 - Use `.newConversation` for ephemeral sessions.
 - Use `.resume(conversationID:)` with a `ChatHistoryStore` for restorable conversations.
-- Keep the default `.matchingUserInput()` response language when people should be able to change languages during a conversation. Use `.appLocale` for the app's language or `.fixed(Locale(...))` for a required locale.
+- Keep the default `.matchingUserInput()` response language when people should be able to change languages within one conversation. The Apple provider detects every new message on device, remembers the last identifiable language for ambiguous follow-ups, and restores it from history. Use `.appLocale` for the app's language or `.fixed(Locale(...))` for a required locale.
 - Keep developer instructions concise; put large or changing information behind `ChatKnowledgeSource`.
 
 ## UIKit presentation

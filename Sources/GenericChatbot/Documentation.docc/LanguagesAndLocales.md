@@ -4,14 +4,16 @@ Let people change languages naturally or keep every response in a locale selecte
 
 ## Follow the person by default
 
-``ChatbotConfiguration`` defaults to ``ChatbotResponseLanguage/matchingUserInput(fallback:)`` with `Locale.current` as its fallback. The Foundation Models provider instructs the model to:
+``ChatbotConfiguration`` defaults to ``ChatbotResponseLanguage/matchingUserInput(fallback:)`` with `Locale.current` as its fallback. For every request, the Foundation Models provider identifies the language from the person's original message on device and gives the model a concrete response locale. This lets one conversation switch from Spanish to English, or from English to Spanish, without creating a new session.
+
+The provider will:
 
 - Respond in the language of the person's latest request.
 - Follow an explicit request to switch to another supported language.
 - Continue the person's most recently identifiable language for short or ambiguous follow-ups.
 - Use the fallback locale only when the conversation doesn't establish a language.
 
-This explicit policy prevents English developer instructions, internal grounding prompts, or application knowledge from unintentionally determining the response language.
+The most recently identified language is restored from persisted conversation history. Very short or low-confidence messages such as “OK” keep that language; the fallback is used only when no request establishes one. This per-request policy prevents the app locale, English developer instructions, internal grounding prompts, or application knowledge from anchoring the entire conversation to one language.
 
 ```swift
 let configuration = ChatbotConfiguration(
@@ -42,7 +44,7 @@ let configuration = ChatbotConfiguration(
 )
 ```
 
-The Foundation Models provider checks fixed and app locales with `SystemLanguageModel.supportsLocale(_:)` before creating a session. An unsupported locale produces ``ChatbotError/unsupportedLanguageOrLocale``. Matching-user behavior is validated by Foundation Models when it analyzes each prompt.
+The Foundation Models provider checks fixed and app locales with `SystemLanguageModel.supportsLocale(_:)` before creating a session. For matching-user behavior, it checks the locale selected for each request before generation. An unsupported locale produces ``ChatbotError/unsupportedLanguageOrLocale``.
 
 ## Localize the interface separately
 
