@@ -24,33 +24,41 @@ public struct DefaultChatbotStyle: ChatbotStyle {
     /// - Parameter configuration: Header presentation data and actions.
     /// - Returns: A system-adaptive header.
     public func makeHeader(configuration: ChatbotHeaderConfiguration) -> some View {
-        HStack(spacing: 12) {
-            if let close = configuration.close {
-                Button(strings.close, systemImage: "xmark", action: close)
-                    .labelStyle(.iconOnly)
-                    .accessibilityLabel(strings.close)
-            }
-
+        ZStack {
             Text(configuration.title)
                 .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .padding(.horizontal, 60)
 
-            if configuration.activity != .idle {
-                ProgressView()
-                    .controlSize(.small)
-                    .accessibilityLabel(configuration.activity == .retrieving ? "Retrieving information" : "Generating response")
+            HStack {
+                if let close = configuration.close {
+                    Button(strings.close, systemImage: "xmark", action: close)
+                        .labelStyle(.iconOnly)
+                        .frame(width: 44, height: 44)
+                        .buttonStyle(.glass)
+                        .buttonBorderShape(.circle)
+                        .tint(theme.accentColor)
+                        .accessibilityLabel(strings.close)
+                }
+
+                Spacer()
+
+                Button(
+                    strings.newConversation,
+                    systemImage: "square.and.pencil",
+                    action: configuration.startNewConversation
+                )
+                .labelStyle(.iconOnly)
+                .frame(width: 44, height: 44)
+                .buttonStyle(.glass)
+                .buttonBorderShape(.circle)
+                .tint(theme.accentColor)
+                .accessibilityLabel(strings.newConversation)
             }
-
-            Button(
-                strings.newConversation,
-                systemImage: "square.and.pencil",
-                action: configuration.startNewConversation
-            )
-            .labelStyle(.iconOnly)
-            .accessibilityLabel(strings.newConversation)
         }
         .padding(.horizontal)
-        .padding(.vertical, 12)
+        .padding(.vertical, 8)
     }
 
     /// Creates the default message bubble.
@@ -133,32 +141,49 @@ public struct DefaultChatbotStyle: ChatbotStyle {
     /// - Parameter configuration: Draft binding, activity, and composer actions.
     /// - Returns: A multiline composer with send or cancel controls.
     public func makeComposer(configuration: ChatbotComposerConfiguration) -> some View {
-        HStack(alignment: .bottom, spacing: 10) {
-            TextField(
-                configuration.placeholder,
-                text: configuration.text,
-                axis: .vertical
-            )
-            .lineLimit(1...6)
-            .textFieldStyle(.roundedBorder)
-            .submitLabel(.send)
-            .onSubmit(configuration.send)
+        GlassEffectContainer(spacing: 10) {
+            HStack(alignment: .bottom, spacing: 10) {
+                TextField(
+                    configuration.placeholder,
+                    text: configuration.text,
+                    axis: .vertical
+                )
+                .lineLimit(1...6)
+                .submitLabel(.send)
+                .onSubmit(configuration.send)
+                .tint(theme.accentColor)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 11)
+                .frame(minHeight: 44)
+                .glassEffect(
+                    .regular.interactive(),
+                    in: .rect(cornerRadius: 22)
+                )
 
-            if configuration.activity == .responding {
-                Button(strings.cancel, systemImage: "stop.fill", action: configuration.cancel)
-                    .labelStyle(.iconOnly)
-                    .accessibilityLabel(strings.cancel)
-            } else {
-                Button(strings.send, systemImage: "arrow.up.circle.fill", action: configuration.send)
-                    .labelStyle(.iconOnly)
-                    .font(.title2)
-                    .foregroundStyle(theme.accentColor)
-                    .disabled(!configuration.isSendEnabled)
-                    .accessibilityLabel(strings.send)
+                if configuration.activity == .responding {
+                    Button(strings.cancel, systemImage: "stop.fill", action: configuration.cancel)
+                        .labelStyle(.iconOnly)
+                        .font(.body.weight(.semibold))
+                        .frame(width: 44, height: 44)
+                        .buttonStyle(.glassProminent)
+                        .buttonBorderShape(.circle)
+                        .tint(theme.accentColor)
+                        .accessibilityLabel(strings.cancel)
+                } else {
+                    Button(strings.send, systemImage: "arrow.up", action: configuration.send)
+                        .labelStyle(.iconOnly)
+                        .font(.body.weight(.semibold))
+                        .frame(width: 44, height: 44)
+                        .buttonStyle(.glassProminent)
+                        .buttonBorderShape(.circle)
+                        .tint(theme.accentColor)
+                        .disabled(!configuration.isSendEnabled)
+                        .accessibilityLabel(strings.send)
+                }
             }
         }
-        .padding()
-        .background(.bar)
+        .padding(.horizontal)
+        .padding(.vertical, 12)
     }
 
     /// Creates the default model-availability state.
