@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "erikote04-ios-skills",
+  "version": "1.0.0",
+  "description": "Reusable skills for integrating Erikote04 iOS libraries.",
+  "metadata": {
+    "description": "Reusable skills for integrating Erikote04 iOS libraries."
+  },
+  "owner": {
+    "name": "Erikote04"
+  },
+  "plugins": [
+    {
+      "name": "ios-chatbot-skill",
+      "description": "Integrate GenericChatbot into any iOS architecture.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Erikote04"
+      },
+      "source": "./",
+      "category": "development",
+      "homepage": "https://erikote04.github.io/ios-generic-chatbot/documentation/genericchatbot/"
+    }
+  ]
+}

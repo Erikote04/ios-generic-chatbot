@@ -1,0 +1,4 @@
+interface:
+  display_name: "iOS Chatbot Integrator"
+  short_description: "Integrate GenericChatbot into any iOS architecture"
+  default_prompt: "Use $ios-chatbot-skill to integrate GenericChatbot into this iOS app."

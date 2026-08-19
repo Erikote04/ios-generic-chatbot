@@ -1,0 +1,20 @@
+{
+  "name": "ios-chatbot-skill",
+  "displayName": "iOS GenericChatbot Integrator",
+  "version": "1.0.0",
+  "description": "Integrate GenericChatbot into any iOS app while preserving its architecture, navigation, dependency injection, and conventions.",
+  "author": {
+    "name": "Erikote04",
+    "url": "https://github.com/Erikote04"
+  },
+  "homepage": "https://erikote04.github.io/ios-generic-chatbot/documentation/genericchatbot/",
+  "repository": "https://github.com/Erikote04/ios-generic-chatbot",
+  "license": "MIT",
+  "keywords": [
+    "ios",
+    "swift",
+    "swiftui",
+    "chatbot",
+    "foundation-models"
+  ]
+}
