@@ -1,5 +1,18 @@
 import SwiftUI
 
+/// Determines whether a chatbot style draws its own header or uses a system navigation bar.
+public enum ChatbotHeaderPresentation: Sendable {
+    /// Render the header returned by ``ChatbotStyle/makeHeader(configuration:)``
+    /// directly above the chatbot content.
+    case inline
+
+    /// Present the title and actions in a native navigation toolbar.
+    ///
+    /// On iOS 26, the system automatically gives toolbar controls Liquid Glass
+    /// styling and coordinates them with the scroll view's edge effect.
+    case navigationBar
+}
+
 /// Semantic appearance values used by ``DefaultChatbotStyle``.
 @MainActor
 public struct ChatbotTheme {
@@ -146,6 +159,12 @@ public protocol ChatbotStyle {
     /// The error view type.
     associatedtype ErrorView: View
 
+    /// How the chatbot presents its title and primary navigation actions.
+    var headerPresentation: ChatbotHeaderPresentation { get }
+
+    /// The tint used by a system navigation header.
+    var navigationTint: Color { get }
+
     /// Creates the chatbot header.
     ///
     /// - Parameter configuration: Header presentation data and actions.
@@ -187,4 +206,12 @@ public protocol ChatbotStyle {
     /// - Parameter configuration: The normalized failure and recovery actions.
     /// - Returns: The style's error view.
     @ViewBuilder func makeError(configuration: ChatbotErrorConfiguration) -> ErrorView
+}
+
+public extension ChatbotStyle {
+    /// Keeps custom styles source-compatible with the original inline header.
+    var headerPresentation: ChatbotHeaderPresentation { .inline }
+
+    /// Uses the host application's accent color by default.
+    var navigationTint: Color { .accentColor }
 }

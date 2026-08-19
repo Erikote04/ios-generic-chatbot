@@ -52,17 +52,41 @@ public struct ChatbotView<Style: ChatbotStyle>: View {
 
     /// The chatbot interface.
     public var body: some View {
-        VStack(spacing: 0) {
-            style.makeHeader(
-                configuration: ChatbotHeaderConfiguration(
-                    title: viewModel.configuration.title,
-                    activity: viewModel.activity,
-                    startNewConversation: viewModel.startNewConversation,
-                    close: close
-                )
-            )
+        Group {
+            switch style.headerPresentation {
+            case .inline:
+                chatbotContent(showsInlineHeader: true)
+            case .navigationBar:
+                NavigationStack {
+                    chatbotContent(showsInlineHeader: false)
+                        .navigationTitle(viewModel.configuration.title)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            navigationToolbar
+                        }
+                }
+                .tint(style.navigationTint)
+            }
+        }
+        .task {
+            await viewModel.prepare()
+        }
+    }
 
-            Divider()
+    private func chatbotContent(showsInlineHeader: Bool) -> some View {
+        VStack(spacing: 0) {
+            if showsInlineHeader {
+                style.makeHeader(
+                    configuration: ChatbotHeaderConfiguration(
+                        title: viewModel.configuration.title,
+                        activity: viewModel.activity,
+                        startNewConversation: viewModel.startNewConversation,
+                        close: close
+                    )
+                )
+
+                Divider()
+            }
 
             if viewModel.availability != .available || viewModel.blockingFailure != nil {
                 style.makeAvailability(
@@ -76,8 +100,30 @@ public struct ChatbotView<Style: ChatbotStyle>: View {
                 conversationContent
             }
         }
-        .task {
-            await viewModel.prepare()
+    }
+
+    @ToolbarContentBuilder
+    private var navigationToolbar: some ToolbarContent {
+        if let close {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(
+                    viewModel.configuration.strings.close,
+                    systemImage: "xmark",
+                    action: close
+                )
+                .labelStyle(.iconOnly)
+                .accessibilityLabel(viewModel.configuration.strings.close)
+            }
+        }
+
+        ToolbarItem(placement: .topBarTrailing) {
+            Button(
+                viewModel.configuration.strings.newConversation,
+                systemImage: "square.and.pencil",
+                action: viewModel.startNewConversation
+            )
+            .labelStyle(.iconOnly)
+            .accessibilityLabel(viewModel.configuration.strings.newConversation)
         }
     }
 

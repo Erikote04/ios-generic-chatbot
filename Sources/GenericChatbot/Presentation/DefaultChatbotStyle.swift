@@ -9,6 +9,12 @@ public struct DefaultChatbotStyle: ChatbotStyle {
     /// Localized button and state labels.
     public var strings: ChatbotStrings
 
+    /// Uses the native navigation toolbar and its automatic Liquid Glass treatment.
+    public var headerPresentation: ChatbotHeaderPresentation { .navigationBar }
+
+    /// Applies the developer-selected accent color to navigation controls.
+    public var navigationTint: Color { theme.accentColor }
+
     /// Creates the default chatbot style.
     ///
     /// - Parameters:
@@ -19,46 +25,15 @@ public struct DefaultChatbotStyle: ChatbotStyle {
         self.strings = strings
     }
 
-    /// Creates the default header.
+    /// Provides the default style's inline-header placeholder.
+    ///
+    /// ``ChatbotView`` presents this style's header through the native navigation
+    /// bar, so no inline content is necessary.
     ///
     /// - Parameter configuration: Header presentation data and actions.
-    /// - Returns: A system-adaptive header.
-    public func makeHeader(configuration: ChatbotHeaderConfiguration) -> some View {
-        ZStack {
-            Text(configuration.title)
-                .font(.headline)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-                .padding(.horizontal, 60)
-
-            HStack {
-                if let close = configuration.close {
-                    Button(strings.close, systemImage: "xmark", action: close)
-                        .labelStyle(.iconOnly)
-                        .frame(width: 44, height: 44)
-                        .buttonStyle(.glass)
-                        .buttonBorderShape(.circle)
-                        .tint(theme.accentColor)
-                        .accessibilityLabel(strings.close)
-                }
-
-                Spacer()
-
-                Button(
-                    strings.newConversation,
-                    systemImage: "square.and.pencil",
-                    action: configuration.startNewConversation
-                )
-                .labelStyle(.iconOnly)
-                .frame(width: 44, height: 44)
-                .buttonStyle(.glass)
-                .buttonBorderShape(.circle)
-                .tint(theme.accentColor)
-                .accessibilityLabel(strings.newConversation)
-            }
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
+    /// - Returns: An empty inline-header placeholder.
+    public func makeHeader(configuration _: ChatbotHeaderConfiguration) -> some View {
+        EmptyView()
     }
 
     /// Creates the default message bubble.
