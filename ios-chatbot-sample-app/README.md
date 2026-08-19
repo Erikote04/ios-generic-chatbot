@@ -16,6 +16,8 @@ A small SwiftUI app showing how to add an app-aware assistant with `GenericChatb
 3. Select a compatible device and run the `ios-chatbot-app` scheme.
 4. Tap **Open assistant** and try one of the suggested questions.
 
+> **Recommendation:** Test this sample—and any chatbot you build with GenericChatbot—on a real Apple Intelligence-capable device. Foundation Models may be unavailable or behave inconsistently in the simulator, so simulator results might not accurately represent the experience on a supported device.
+
 If Foundation Models are unavailable, the chatbot presents the library's normalized availability error instead of starting a conversation.
 
 ## What the integration demonstrates
