@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BBDCBDEB3035BF27000EFC2A /* GenericChatbot in Frameworks */ = {isa = PBXBuildFile; productRef = BBDCBDEA3035BF27000EFC2A /* GenericChatbot */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		BB52FD753035BBD500874935 /* ios-chatbot-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-chatbot-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBDCBDEB3035BF27000EFC2A /* GenericChatbot in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = "ios-chatbot-app";
 			packageProductDependencies = (
+				BBDCBDEA3035BF27000EFC2A /* GenericChatbot */,
 			);
 			productName = "ios-chatbot-app";
 			productReference = BB52FD753035BBD500874935 /* ios-chatbot-app.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = BB52FD6C3035BBD500874935;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BBDCBDE93035BF27000EFC2A /* XCRemoteSwiftPackageReference "ios-generic-chatbot" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BB52FD763035BBD500874935 /* Products */;
 			projectDirPath = "";
@@ -332,6 +341,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BBDCBDE93035BF27000EFC2A /* XCRemoteSwiftPackageReference "ios-generic-chatbot" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Erikote04/ios-generic-chatbot.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BBDCBDEA3035BF27000EFC2A /* GenericChatbot */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BBDCBDE93035BF27000EFC2A /* XCRemoteSwiftPackageReference "ios-generic-chatbot" */;
+			productName = GenericChatbot;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BB52FD6D3035BBD500874935 /* Project object */;
 }
