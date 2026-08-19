@@ -7,6 +7,49 @@ description: Integrate the GenericChatbot Swift package into existing iOS applic
 
 Integrate GenericChatbot at the host application's existing composition, navigation, state-management, and data boundaries. Preserve the app's architecture and conventions.
 
+## Installation guide
+
+GenericChatbot requires iOS 26 or later, Xcode 26 or later, and Swift 6.2 or later. Before changing application code, verify that the app target meets these requirements and does not already link the `GenericChatbot` product.
+
+### Install with Xcode
+
+Use this approach for an app managed by an Xcode project or workspace:
+
+1. Open the project or workspace in Xcode.
+2. Select **File > Add Package Dependencies**.
+3. Enter `https://github.com/Erikote04/ios-generic-chatbot.git`.
+4. Select **Up to Next Major Version** starting at `1.0.0`, unless the project has a different package-version policy.
+5. Add the `GenericChatbot` product only to the target that owns the integration.
+6. Resolve packages and build that target to verify the dependency.
+
+### Install with Package.swift
+
+Add the package to `dependencies`:
+
+```swift
+.package(
+    url: "https://github.com/Erikote04/ios-generic-chatbot.git",
+    from: "1.0.0"
+)
+```
+
+Then link the product from the integrating target:
+
+```swift
+.product(
+    name: "GenericChatbot",
+    package: "ios-generic-chatbot"
+)
+```
+
+Resolve dependencies, build the target, and import the module only where it is used:
+
+```swift
+import GenericChatbot
+```
+
+For Tuist, XcodeGen, modular workspaces, and existing dependency conventions, update the project's source of truth rather than generated files. Follow the complete decision guide in [dependency-installation.md](reference/dependency-installation.md).
+
 ## Required workflow
 
 ### 1. Complete the dependency gate first
