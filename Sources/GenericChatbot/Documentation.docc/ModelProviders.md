@@ -50,6 +50,8 @@ actor RemoteModelSession: ChatModelSession {
 
 Nonstreaming services can emit one ``ChatResponseEvent/textDelta(_:)`` followed by ``ChatResponseEvent/completed``.
 
+Custom providers receive ``ChatSessionConfiguration/responseLanguage`` when the session is created. Translate that value into the provider's native language option or trusted system instructions. For matching-user behavior, prefer the language of the latest user message, continue the last identifiable user language for ambiguous follow-ups, and use the associated locale only as a fallback.
+
 ## Provider recommendations
 
 - Use actors for mutable session state.
@@ -57,4 +59,5 @@ Nonstreaming services can emit one ``ChatResponseEvent/textDelta(_:)`` followed 
 - Return provider-neutral values rather than exposing SDK-specific types.
 - End every stream and propagate cancellation to network/model work.
 - Throw ``ChatbotError`` when the provider can classify a failure precisely.
+- Honor ``ChatSessionConfiguration/responseLanguage`` without treating retrieved context as a language preference.
 - Never expose raw server or SDK diagnostics in user-facing strings.

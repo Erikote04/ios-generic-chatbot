@@ -85,6 +85,7 @@ struct ContentView: View {
 
             Text("“What is GenericChatbot?”")
             Text("“How does app knowledge work?”")
+            Text("“¿Qué es GenericChatbot?”")
         }
         .foregroundStyle(.secondary)
         .frame(maxWidth: .infinity, alignment: .leading)

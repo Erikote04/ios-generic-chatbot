@@ -8,14 +8,23 @@ public struct ChatSessionConfiguration: Equatable, Sendable {
     /// Stable history that the session can restore.
     public let conversation: ChatConversation
 
+    /// The language and regional conventions the session uses for responses.
+    public let responseLanguage: ChatbotResponseLanguage
+
     /// Creates model-session configuration.
     ///
     /// - Parameters:
     ///   - instructions: Trusted instructions owned by the host application.
     ///   - conversation: Existing complete messages to restore.
-    public init(instructions: String, conversation: ChatConversation) {
+    ///   - responseLanguage: How the session selects its response language.
+    public init(
+        instructions: String,
+        conversation: ChatConversation,
+        responseLanguage: ChatbotResponseLanguage = .matchingUserInput()
+    ) {
         self.instructions = instructions
         self.conversation = conversation
+        self.responseLanguage = responseLanguage
     }
 }
 

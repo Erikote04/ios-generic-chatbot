@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import GenericChatbot
 
@@ -105,6 +106,35 @@ struct ChatbotViewModelTests {
         #expect(sut.availability == .unavailable(.deviceNotEligible))
         #expect(sut.blockingFailure?.scope == .blocking)
         #expect(sut.isSendEnabled == false)
+    }
+
+    @Test("Forwards response language behavior when creating a model session")
+    func forwardsResponseLanguage() async {
+        // Given
+        let locale = Locale(identifier: "es_ES")
+        let recorder = ChatSessionConfigurationRecorder()
+        let provider = ChatModelProviderStub(
+            session: ChatModelSessionSpyingStub(),
+            configurationRecorder: recorder
+        )
+        let sut = ChatbotViewModel(
+            configuration: ChatbotConfiguration(
+                answerPolicy: .general,
+                responseLanguage: .fixed(locale)
+            ),
+            provider: provider,
+            knowledgeSource: EmptyChatKnowledgeSource(),
+            historyStore: InMemoryChatHistoryStore(),
+            reporter: NoOpChatbotErrorReporter()
+        )
+
+        // When
+        await sut.prepare()
+
+        // Then
+        let configurations = await recorder.configurations
+        #expect(configurations.count == 1)
+        #expect(configurations.first?.responseLanguage == .fixed(locale))
     }
 
     @Test("Cancelling a stream leaves a cancelled assistant message")

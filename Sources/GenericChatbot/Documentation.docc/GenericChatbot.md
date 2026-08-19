@@ -29,9 +29,11 @@ ChatbotLauncher { close in
 ### Essentials
 
 - <doc:GettingStarted>
+- <doc:LanguagesAndLocales>
 - ``ChatbotLauncher``
 - ``ChatbotView``
 - ``ChatbotConfiguration``
+- ``ChatbotResponseLanguage``
 
 ### Model execution
 

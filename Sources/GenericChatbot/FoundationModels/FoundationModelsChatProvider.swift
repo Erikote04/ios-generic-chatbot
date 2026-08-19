@@ -51,6 +51,11 @@ public struct FoundationModelsChatProvider: ChatModelProvider {
             throw ChatbotError.modelUnavailable(reason)
         }
 
+        if let requiredLocale = Self.requiredLocale(for: configuration.responseLanguage),
+           !model.supportsLocale(requiredLocale) {
+            throw ChatbotError.unsupportedLanguageOrLocale
+        }
+
         return FoundationModelsChatSession(
             model: model,
             options: options,
@@ -74,6 +79,80 @@ public struct FoundationModelsChatProvider: ChatModelProvider {
             return .unavailable(.unknown)
         }
     }
+
+    static func makeInstructions(
+        for configuration: ChatSessionConfiguration,
+        currentLocale: Locale = .current
+    ) -> String {
+        let responseLanguageInstructions = languageInstructions(
+            for: configuration.responseLanguage,
+            currentLocale: currentLocale
+        )
+
+        return [configuration.instructions, responseLanguageInstructions]
+            .filter { !$0.isEmpty }
+            .joined(separator: "\n\n")
+    }
+
+    private static func requiredLocale(
+        for responseLanguage: ChatbotResponseLanguage,
+        currentLocale: Locale = .current
+    ) -> Locale? {
+        switch responseLanguage {
+        case .matchingUserInput:
+            nil
+        case .appLocale:
+            currentLocale
+        case .fixed(let locale):
+            locale
+        }
+    }
+
+    private static func languageInstructions(
+        for responseLanguage: ChatbotResponseLanguage,
+        currentLocale: Locale
+    ) -> String {
+        switch responseLanguage {
+        case .matchingUserInput(let fallback):
+            return [
+                localeInstruction(for: fallback),
+                """
+                You MUST respond in the language used in the person's most recent request. Follow an explicit request to respond in another supported language. If the most recent request is too short or ambiguous to identify a language, continue using the language the person most recently used. If the conversation doesn't establish a language, respond in the language of the person's locale.
+                """,
+            ]
+            .filter { !$0.isEmpty }
+            .joined(separator: "\n")
+        case .appLocale:
+            return [
+                localeInstruction(for: currentLocale),
+                "You MUST respond in the language of the person's locale.",
+            ]
+            .filter { !$0.isEmpty }
+            .joined(separator: "\n")
+        case .fixed(let locale):
+            return [
+                localeInstruction(for: locale),
+                "You MUST respond in \(languageName(for: locale)) and use the spelling, vocabulary, and cultural conventions of \(locale.identifier).",
+            ]
+            .filter { !$0.isEmpty }
+            .joined(separator: "\n")
+        }
+    }
+
+    private static func localeInstruction(for locale: Locale) -> String {
+        guard !Locale.Language(identifier: "en_US").isEquivalent(to: locale.language) else {
+            return ""
+        }
+        return "The person's locale is \(locale.identifier)."
+    }
+
+    private static func languageName(for locale: Locale) -> String {
+        guard let languageCode = locale.language.languageCode?.identifier else {
+            return locale.identifier
+        }
+        return Locale(identifier: "en_US").localizedString(forLanguageCode: languageCode)
+            ?? languageCode
+    }
 }
 
 @available(iOS 26.0, *)
@@ -88,11 +167,15 @@ private actor FoundationModelsChatSession: ChatModelSession {
     ) {
         self.options = options
 
-        let transcript = Self.makeTranscript(configuration: configuration)
+        let instructions = FoundationModelsChatProvider.makeInstructions(for: configuration)
+        let transcript = Self.makeTranscript(
+            configuration: configuration,
+            instructions: instructions
+        )
         if transcript.isEmpty {
             session = LanguageModelSession(
                 model: model,
-                instructions: configuration.instructions.isEmpty ? nil : configuration.instructions
+                instructions: instructions.isEmpty ? nil : instructions
             )
         } else {
             session = LanguageModelSession(model: model, transcript: transcript)
@@ -144,15 +227,16 @@ private actor FoundationModelsChatSession: ChatModelSession {
     }
 
     private static func makeTranscript(
-        configuration: ChatSessionConfiguration
+        configuration: ChatSessionConfiguration,
+        instructions: String
     ) -> Transcript {
         var entries: [Transcript.Entry] = []
 
-        if !configuration.instructions.isEmpty {
+        if !instructions.isEmpty {
             entries.append(
                 .instructions(
                     Transcript.Instructions(
-                        segments: [.text(.init(content: configuration.instructions))],
+                        segments: [.text(.init(content: instructions))],
                         toolDefinitions: []
                     )
                 )

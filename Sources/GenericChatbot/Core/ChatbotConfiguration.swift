@@ -18,6 +18,27 @@ public enum ChatConversationLifecycle: Codable, Equatable, Sendable {
     case resume(conversationID: String)
 }
 
+/// Controls the language and regional conventions used for model responses.
+public enum ChatbotResponseLanguage: Equatable, Sendable {
+    /// Follow the language of the person's latest request.
+    ///
+    /// The model continues using the person's most recently identifiable language
+    /// for short or ambiguous follow-ups, and uses `fallback` when the conversation
+    /// doesn't establish a language.
+    case matchingUserInput(fallback: Locale = .current)
+
+    /// Always respond using the application's current locale.
+    ///
+    /// `Locale.current` includes the language selected for the application in
+    /// system settings. Resolve this locale when a model session is created.
+    case appLocale
+
+    /// Always respond using a developer-selected language and regional conventions.
+    ///
+    /// - Parameter locale: The required response locale.
+    case fixed(Locale)
+}
+
 /// Localized text used by the default chatbot style and error presenter.
 ///
 /// Initialize this value with strings localized by the host application. Keeping
@@ -179,6 +200,9 @@ public struct ChatbotConfiguration: Equatable, Sendable {
     /// The maximum number of knowledge items requested for each prompt.
     public var retrievalLimit: Int
 
+    /// The language and regional conventions used for model responses.
+    public var responseLanguage: ChatbotResponseLanguage
+
     /// Localized strings used for built-in presentation and failures.
     public var strings: ChatbotStrings
 
@@ -191,6 +215,8 @@ public struct ChatbotConfiguration: Equatable, Sendable {
     ///   - conversationLifecycle: Whether to create or restore a conversation.
     ///   - retrievalLimit: The maximum number of context items per prompt. Values
     ///     below zero are treated as zero.
+    ///   - responseLanguage: How the model selects its response language. The default
+    ///     follows the person's latest request and uses the app locale as a fallback.
     ///   - strings: Localized interface and error text.
     /// - Tip: Keep instructions concise because they consume model context on every
     ///   request. Put large, changing data behind ``ChatKnowledgeSource`` instead.
@@ -200,6 +226,7 @@ public struct ChatbotConfiguration: Equatable, Sendable {
         answerPolicy: ChatAnswerPolicy = .groundedOnly,
         conversationLifecycle: ChatConversationLifecycle = .newConversation,
         retrievalLimit: Int = 5,
+        responseLanguage: ChatbotResponseLanguage = .matchingUserInput(),
         strings: ChatbotStrings = .default
     ) {
         self.title = title
@@ -207,6 +234,7 @@ public struct ChatbotConfiguration: Equatable, Sendable {
         self.answerPolicy = answerPolicy
         self.conversationLifecycle = conversationLifecycle
         self.retrievalLimit = max(0, retrievalLimit)
+        self.responseLanguage = responseLanguage
         self.strings = strings
     }
 }

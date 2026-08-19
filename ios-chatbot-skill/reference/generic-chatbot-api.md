@@ -44,6 +44,7 @@ struct AssistantEntryPoint: View {
 - Use `.general` when the model may answer from general capabilities and optionally prefer retrieved context.
 - Use `.newConversation` for ephemeral sessions.
 - Use `.resume(conversationID:)` with a `ChatHistoryStore` for restorable conversations.
+- Keep the default `.matchingUserInput()` response language when people should be able to change languages during a conversation. Use `.appLocale` for the app's language or `.fixed(Locale(...))` for a required locale.
 - Keep developer instructions concise; put large or changing information behind `ChatKnowledgeSource`.
 
 ## UIKit presentation
@@ -68,4 +69,4 @@ Adapt the closure to the app's router or coordinator rather than retaining a vie
 
 ## Foundation Models behavior
 
-`FoundationModelsChatProvider` checks Apple model availability, restores complete history, streams response deltas, and normalizes all current Foundation Models availability and generation failures. Apple's model runs on-device once assets are ready; network reachability belongs only to remote providers or knowledge sources.
+`FoundationModelsChatProvider` checks Apple model availability, restores complete history, applies the configured response-language behavior, streams response deltas, and normalizes all current Foundation Models availability and generation failures. Apple's model runs on-device once assets are ready; network reachability belongs only to remote providers or knowledge sources.

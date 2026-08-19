@@ -70,6 +70,19 @@ struct AssistantButton: View {
 
 The default launcher is a round SF Symbol button. `ChatbotView` can also be embedded directly, and `ChatbotStyle` allows every visual slot to be replaced without moving model or persistence behavior into the UI.
 
+## Response language
+
+By default, the assistant responds in the language of the person's latest message and follows language changes during the conversation. Short or ambiguous follow-ups continue in the person's most recently identifiable language, with the app locale as a fallback.
+
+Developers can instead keep responses in the app language or require a specific locale:
+
+```swift
+ChatbotConfiguration(responseLanguage: .appLocale)
+ChatbotConfiguration(responseLanguage: .fixed(Locale(identifier: "es_ES")))
+```
+
+Interface localization remains controlled separately through `ChatbotStrings`. Unsupported Foundation Models languages are reported through `ChatbotError.unsupportedLanguageOrLocale`.
+
 ## Documentation
 
 Read the complete [GenericChatbot documentation](https://erikote04.github.io/ios-generic-chatbot/documentation/genericchatbot/) for guides covering model providers, arbitrary application knowledge, errors and recovery, styling, persistence, localization, privacy, and integration best practices.

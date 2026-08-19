@@ -30,6 +30,8 @@ GenericChatbot covers every current `LanguageModelSession.GenerationError`:
 
 The provider also covers `LanguageModelSession.ToolCallError`, `CancellationError`, and unknown future SDK cases.
 
+For ``ChatbotResponseLanguage/appLocale`` and ``ChatbotResponseLanguage/fixed(_:)``, the Apple provider validates the required locale before creating the session. With ``ChatbotResponseLanguage/matchingUserInput(fallback:)``, Foundation Models validates the languages present in each request and throws `unsupportedLanguageOrLocale` when necessary.
+
 ## Connectivity and remote services
 
 Provider-neutral errors cover offline status, connection loss, timeout, host resolution, server availability, authentication, invalid responses, retrieval, persistence, provider failures, and unknown transports.

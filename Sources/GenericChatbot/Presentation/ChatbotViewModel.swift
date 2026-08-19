@@ -302,7 +302,8 @@ final class ChatbotViewModel {
         try await provider.makeSession(
             configuration: ChatSessionConfiguration(
                 instructions: configuration.instructions,
-                conversation: history
+                conversation: history,
+                responseLanguage: configuration.responseLanguage
             )
         )
     }

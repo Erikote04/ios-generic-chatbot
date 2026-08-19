@@ -38,6 +38,8 @@ struct ContentView: View {
 
 The Foundation Models provider checks whether the device supports Apple Intelligence, whether it is enabled, and whether model assets are ready. The composer remains disabled until the model is available.
 
+The default ``ChatbotResponseLanguage/matchingUserInput(fallback:)`` behavior answers in the language of the person's latest message and follows language changes during the conversation. See <doc:LanguagesAndLocales> to use the app locale or require a developer-selected locale.
+
 ## Embed the chat directly
 
 Place ``ChatbotView`` anywhere a SwiftUI view is accepted. Omit `close` when the host owns navigation outside the component.
@@ -55,6 +57,7 @@ NavigationStack {
 
 - Use ``ChatKnowledgeSource`` for large or changing application information.
 - Keep developer instructions short because they consume model context.
+- Choose an explicit ``ChatbotResponseLanguage`` when responses must remain in the app language or a fixed locale.
 - Default to ``ChatAnswerPolicy/groundedOnly`` when unsupported statements would be harmful.
 - Inject localized ``ChatbotStrings`` from the host application.
 - Add a ``ChatbotErrorReporter`` for sanitized operational diagnostics.

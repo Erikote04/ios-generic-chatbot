@@ -25,7 +25,7 @@ If Foundation Models are unavailable, the chatbot presents the library's normali
 The implementation lives in `ios-chatbot-app/ios-chatbot-app/ContentView.swift` and uses:
 
 - `ChatbotLauncher` to present the assistant.
-- `ChatbotConfiguration` to define instructions, grounded-only answers, strings, and retrieval behavior.
+- `ChatbotConfiguration` to define instructions, grounded-only answers, response-language behavior, strings, and retrieval behavior.
 - `FoundationModelsChatProvider` for Apple's on-device model.
 - `SampleKnowledgeSource` to provide app-owned context without retraining the model.
 - `ChatbotTheme` to apply the sample's indigo accent.
@@ -48,3 +48,5 @@ ChatbotLauncher(tint: .indigo) { close in
 ```
 
 Replace the sample instructions, strings, theme, and knowledge source with values and adapters owned by your app. See the [complete GenericChatbot documentation](https://erikote04.github.io/ios-generic-chatbot/documentation/genericchatbot/) for all configuration and extension points.
+
+GenericChatbot defaults to matching the language of the latest user message, allowing the person to change languages during a conversation. Use `.appLocale` or `.fixed(Locale(...))` when your product requires a stable response language.

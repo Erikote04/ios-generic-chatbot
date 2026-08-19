@@ -93,6 +93,7 @@ actor ControlledChatModelSession: ChatModelSession {
 struct ChatModelProviderStub: ChatModelProvider {
     var currentAvailability: ChatModelAvailability = .available
     var session: any ChatModelSession
+    var configurationRecorder: ChatSessionConfigurationRecorder?
 
     func availability() async -> ChatModelAvailability {
         currentAvailability
@@ -101,7 +102,18 @@ struct ChatModelProviderStub: ChatModelProvider {
     func makeSession(
         configuration: ChatSessionConfiguration
     ) async throws -> any ChatModelSession {
-        session
+        if let configurationRecorder {
+            await configurationRecorder.record(configuration)
+        }
+        return session
+    }
+}
+
+actor ChatSessionConfigurationRecorder {
+    private(set) var configurations: [ChatSessionConfiguration] = []
+
+    func record(_ configuration: ChatSessionConfiguration) {
+        configurations.append(configuration)
     }
 }
 
