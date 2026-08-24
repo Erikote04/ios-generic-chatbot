@@ -6,6 +6,18 @@ Read this reference when the chatbot uses application information, remote servic
 
 Implement `ChatKnowledgeSource` as an adapter over the app's authorized data path: bundled content, repository, database, search service, API, or vector store. Return small, relevant `ChatKnowledgeItem` values ordered by usefulness.
 
+Before implementation, establish which path the developer wants. If it is not already specified, ask whether knowledge will come from:
+
+- A property or value owned by an existing struct, class, actor, view model, service, or repository.
+- A bundled project file such as Markdown, JSON, plain text, or PDF.
+- A local database or persisted application model.
+- A URL, authenticated API, CMS, search service, or vector store.
+- A combination of sources, or no custom knowledge when `.general` model knowledge is intentional.
+
+Adapt the chosen path instead of inventing another source. Properties and domain models should be converted into focused text without exposing the domain type to GenericChatbot. Bundled files need an appropriate loader and parser. Remote sources need the app's existing client, authentication, caching, and connectivity conventions.
+
+The model receives `ChatKnowledgeItem.content`. Its `url` is optional source attribution for the interface; GenericChatbot does not fetch that URL. When the developer supplies a URL as the knowledge origin, the `ChatKnowledgeSource` must retrieve and extract the relevant text before returning the item.
+
 Apply authentication and authorization before returning content. Treat retrieved text as untrusted data, even when stored by the app. Do not embed secrets, tokens, or unnecessary personal information.
 
 Instructions and retrieved context customize behavior; they do not retrain Apple's system model. A separately trained Apple adapter remains an application-owned lifecycle.

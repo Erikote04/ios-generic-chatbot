@@ -2,7 +2,7 @@
 
 Use this skill to add and configure [GenericChatbot](https://github.com/Erikote04/ios-generic-chatbot) in an existing iOS application without replacing its architecture.
 
-The workflow supports SwiftUI, UIKit, mixed UI, MVVM, MVC, coordinators, Clean Architecture, VIPER, reducer-based architectures, generated projects, and modular applications. It always checks and installs the library dependency before implementing the feature.
+The workflow supports SwiftUI, UIKit, mixed UI, MVVM, MVC, coordinators, Clean Architecture, VIPER, reducer-based architectures, generated projects, and modular applications. It always checks and installs the library dependency, then establishes whether chatbot knowledge comes from app properties, bundled files, databases, URLs or APIs, retrieval services, multiple sources, or general model knowledge before implementing the feature.
 
 ## Codex
 

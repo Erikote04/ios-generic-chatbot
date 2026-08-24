@@ -1,6 +1,6 @@
 ---
 name: ios-chatbot-skill
-description: Integrate the GenericChatbot Swift package into existing iOS applications without changing their architecture. Use when adding, wiring, customizing, troubleshooting, or testing the reusable chatbot in SwiftUI, UIKit, mixed, MVVM, MVC, coordinator, Clean Architecture, VIPER, reducer-based, or modular iOS projects. Always verify and install the package dependency before implementing the feature.
+description: Integrate the GenericChatbot Swift package into existing iOS applications without changing their architecture. Use when adding, wiring, customizing, troubleshooting, or testing the reusable chatbot in SwiftUI, UIKit, mixed, MVVM, MVC, coordinator, Clean Architecture, VIPER, reducer-based, or modular iOS projects. Always verify the package dependency and establish how the app will provide chatbot knowledge before implementing the feature.
 ---
 
 # iOS GenericChatbot Integration
@@ -99,7 +99,17 @@ After the dependency gate passes, inspect enough of the app to identify:
 
 Read [architecture-adaptation.md](reference/architecture-adaptation.md) for the matching patterns. Do not migrate the app to another architecture.
 
-### 3. Design the smallest architecture-native seam
+### 3. Establish the application knowledge source
+
+Before designing or implementing the chatbot, determine how the host will provide its application-specific knowledge. If the developer has not already made this clear, ask a blocking question such as:
+
+> How will this app provide knowledge to the chatbot—for example, values held by a struct or class, bundled files such as Markdown, JSON, or PDF, a local database or repository, a URL or remote API, a search or vector service, or no custom knowledge?
+
+Accept one source, multiple sources, or an explicit choice to use only the model's general knowledge. Do not ask again when the request or existing implementation already answers the question. Inspect named sources before choosing an adapter, and clarify only details that materially affect the implementation, such as whether remote content requires authentication or whether a file is static or updated at runtime.
+
+Every selected source must ultimately produce relevant text in `ChatKnowledgeItem.content` through `ChatKnowledgeSource`. `ChatKnowledgeItem.url` is optional attribution metadata and does not cause the model or library to download a page. Read [knowledge-errors-and-privacy.md](reference/knowledge-errors-and-privacy.md) before implementing the selected path.
+
+### 4. Design the smallest architecture-native seam
 
 - Construct model, knowledge, history, and reporter dependencies at the app's existing composition boundary.
 - Keep `ChatbotView` responsible for chat interaction state; do not duplicate its orchestration in a host view model, presenter, or reducer.
@@ -109,7 +119,7 @@ Read [architecture-adaptation.md](reference/architecture-adaptation.md) for the 
 
 Read [generic-chatbot-api.md](reference/generic-chatbot-api.md) before choosing APIs. Read [knowledge-errors-and-privacy.md](reference/knowledge-errors-and-privacy.md) when adding application content, remote dependencies, persistence, or telemetry.
 
-### 4. Implement within existing conventions
+### 5. Implement within existing conventions
 
 1. Add `import GenericChatbot` only where needed.
 2. Add a feature wrapper or factory when that matches the architecture; avoid global singletons.
@@ -118,7 +128,7 @@ Read [generic-chatbot-api.md](reference/generic-chatbot-api.md) before choosing 
 5. Preserve the host's navigation ownership, localization, design tokens, and accessibility behavior.
 6. Handle model availability and dependency failures through the library's normalized error model; do not preemptively disable Apple's on-device provider merely because the network is offline.
 
-### 5. Verify the integration
+### 6. Verify the integration
 
 Read and follow [verification.md](reference/verification.md).
 
@@ -128,7 +138,7 @@ Read and follow [verification.md](reference/verification.md).
 - Check VoiceOver labels, Dynamic Type, keyboard behavior, and presentation dismissal.
 - Review the diff for accidental architecture migrations, duplicate state, leaked prompt content, and unrelated edits.
 
-### 6. Report the outcome
+### 7. Report the outcome
 
 Summarize the dependency change, integration location, configuration choices, adapters, error handling, and verification performed. Mention any required device capability or unresolved deployment-target constraint.
 
@@ -136,7 +146,7 @@ Summarize the dependency change, integration location, configuration choices, ad
 
 - Always read [dependency-installation.md](reference/dependency-installation.md) and [generic-chatbot-api.md](reference/generic-chatbot-api.md).
 - Read only the applicable sections of [architecture-adaptation.md](reference/architecture-adaptation.md).
-- Read [knowledge-errors-and-privacy.md](reference/knowledge-errors-and-privacy.md) when the integration uses app knowledge, networking, storage, diagnostics, or personalized data.
+- Always read [knowledge-errors-and-privacy.md](reference/knowledge-errors-and-privacy.md) before deciding how application knowledge enters the chatbot.
 - Always read [verification.md](reference/verification.md) before completing the task.
 
 ## Guardrails
