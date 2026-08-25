@@ -1,6 +1,6 @@
 # GenericChatbot Sample App
 
-A small SwiftUI app showing how to add an app-aware assistant with `GenericChatbot`. The example keeps integration at the view boundary and demonstrates configuration, custom strings, theming, grounded answers, and an application-owned knowledge source.
+A small SwiftUI app showing how to add an app-aware assistant with `GenericChatbot`. The examples keep integration at the view boundary and demonstrate configuration, custom strings, theming, grounded answers, an application-owned knowledge source, and multiple presentation patterns.
 
 ## Requirements
 
@@ -14,17 +14,26 @@ A small SwiftUI app showing how to add an app-aware assistant with `GenericChatb
 1. Open `ios-chatbot-app/ios-chatbot-app.xcodeproj` in Xcode.
 2. Wait for Swift Package Manager to resolve `GenericChatbot`.
 3. Select a compatible device and run the `ios-chatbot-app` scheme.
-4. Tap **Open assistant** and try one of the suggested questions.
+4. Tap the assistant button in the bottom-trailing corner and try one of the suggested questions.
 
 > **Recommendation:** Test this sample—and any chatbot you build with GenericChatbot—on a real Apple Intelligence-capable device. Foundation Models may be unavailable or behave inconsistently in the simulator, so simulator results might not accurately represent the experience on a supported device.
 
 If Foundation Models are unavailable, the chatbot presents the library's normalized availability error instead of starting a conversation.
 
+## Examples
+
+The implementation lives in `ios-chatbot-app/ios-chatbot-app/ContentView.swift` and includes three Xcode previews:
+
+- **Floating assistant:** The original landing screen with a chatbot launcher fixed to the bottom-trailing corner. This is the example shown when the app runs.
+- **Assistant tab:** A five-item tab bar with Home, Search, AI Assistant, Notifications, and Profile. The AI Assistant tab embeds `ChatbotView` directly instead of presenting it modally.
+- **Tabs with floating assistant:** A four-item custom bottom navigation bar with Home, Discovery, Activity, and Profile, aligned beside a separate chatbot launcher.
+
 ## What the integration demonstrates
 
-The implementation lives in `ios-chatbot-app/ios-chatbot-app/ContentView.swift` and uses:
+The examples use:
 
-- `ChatbotLauncher` to present the assistant.
+- `ChatbotLauncher` to present the assistant from a floating button.
+- `ChatbotView` directly as the content of a tab.
 - `ChatbotConfiguration` to define instructions, grounded-only answers, response-language behavior, strings, and retrieval behavior.
 - `FoundationModelsChatProvider` for Apple's on-device model.
 - `SampleKnowledgeSource` to provide app-owned context without retraining the model.

@@ -8,34 +8,38 @@
 import GenericChatbot
 import SwiftUI
 
+// MARK: main content
+
 struct ContentView: View {
-    private let configuration = ChatbotConfiguration(
-        title: "GenericChatbot Guide",
-        instructions: "Answer clearly using only the supplied GenericChatbot documentation.",
-        answerPolicy: .groundedOnly,
-        retrievalLimit: 1,
-        strings: ChatbotStrings(
-            emptyTitle: "Ask about GenericChatbot",
-            emptyMessage: "Learn how to integrate and customize the library in an iOS app.",
-            composerPlaceholder: "Ask about the library"
-        )
-    )
-
-    private let provider = FoundationModelsChatProvider()
-    private let knowledgeSource = SampleKnowledgeSource()
-
     var body: some View {
+        FloatingAssistantExample()
+    }
+}
+
+// MARK: FAB assistant
+
+struct FloatingAssistantExample: View {
+    var body: some View {
+        ZStack(alignment: .bottomTrailing) {
+            landingContent
+
+            SampleChatbotLauncher()
+                .padding(.trailing, 24)
+        }
+    }
+
+    private var landingContent: some View {
         ScrollView {
             VStack(spacing: 28) {
                 header
                 features
                 suggestedQuestions
-                launcher
             }
             .frame(maxWidth: 560)
             .padding(24)
+            .padding(.bottom, 88)
         }
-        .background(Color(.systemGroupedBackground))
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
     }
 
     private var header: some View {
@@ -90,30 +94,6 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private var launcher: some View {
-        VStack(spacing: 10) {
-            ChatbotLauncher(
-                accessibilityLabel: "Open the GenericChatbot guide",
-                tint: .indigo
-            ) { close in
-                ChatbotView(
-                    configuration: configuration,
-                    provider: provider,
-                    knowledgeSource: knowledgeSource,
-                    theme: ChatbotTheme(
-                        accentColor: .indigo,
-                        userBubbleColor: .indigo
-                    ),
-                    close: close
-                )
-            }
-
-            Text("Open assistant")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-    }
-
     private func feature(
         _ title: String,
         description: String,
@@ -136,6 +116,215 @@ struct ContentView: View {
     }
 }
 
+// MARK: TAB assistant
+
+struct AssistantTabExample: View {
+    var body: some View {
+        TabView {
+            Tab("Home", systemImage: "house.fill") {
+                SampleTabContent(
+                    title: "Home",
+                    message: "Your app's primary content can live here.",
+                    systemImage: "house.fill"
+                )
+            }
+
+            Tab("Search", systemImage: "magnifyingglass") {
+                SampleTabContent(
+                    title: "Search",
+                    message: "Help people find content across the app.",
+                    systemImage: "magnifyingglass"
+                )
+            }
+
+            Tab("AI Assistant", systemImage: "sparkles") {
+                SampleChatbotView()
+            }
+
+            Tab("Notifications", systemImage: "bell.fill") {
+                SampleTabContent(
+                    title: "Notifications",
+                    message: "Important updates appear here.",
+                    systemImage: "bell.fill"
+                )
+            }
+
+            Tab("Profile", systemImage: "person.crop.circle.fill") {
+                SampleTabContent(
+                    title: "Profile",
+                    message: "Account details and preferences live here.",
+                    systemImage: "person.crop.circle.fill"
+                )
+            }
+        }
+        .tint(.indigo)
+    }
+}
+
+// MARK: TAB + FAB assistant
+
+struct TabsWithFloatingAssistantExample: View {
+    @State private var selection = Destination.home
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            SampleTabContent(
+                title: selection.title,
+                message: "Sample content for the \(selection.title.lowercased()) tab.",
+                systemImage: selection.systemImage
+            )
+
+            bottomBar
+                .padding(.bottom)
+        }
+        .ignoresSafeArea()
+    }
+
+    private var bottomBar: some View {
+        GlassEffectContainer(spacing: 12) {
+            HStack(spacing: 12) {
+                HStack(spacing: 0) {
+                    ForEach(Destination.allCases) { destination in
+                        Button {
+                            selection = destination
+                        } label: {
+                            VStack(spacing: 3) {
+                                Image(systemName: destination.systemImage)
+                                    .font(.title3)
+
+                                Text(destination.title)
+                                    .font(.caption2)
+                                    .lineLimit(1)
+                            }
+                            .foregroundStyle(selection == destination ? .indigo : .primary)
+                            .frame(maxWidth: .infinity, minHeight: 52)
+                            .background(
+                                selection == destination
+                                    ? Color.indigo.opacity(0.14)
+                                    : Color.clear,
+                                in: .capsule
+                            )
+                            .contentShape(.capsule)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityAddTraits(selection == destination ? .isSelected : [])
+                    }
+                }
+                .padding(5)
+                .frame(maxWidth: .infinity)
+                .glassEffect(.regular, in: .capsule)
+
+                SampleChatbotLauncher()
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+    }
+
+    private enum Destination: String, CaseIterable, Identifiable {
+        case home
+        case discovery
+        case activity
+        case profile
+
+        var id: Self { self }
+
+        var title: String {
+            switch self {
+            case .home: "Home"
+            case .discovery: "Discovery"
+            case .activity: "Activity"
+            case .profile: "Profile"
+            }
+        }
+
+        var systemImage: String {
+            switch self {
+            case .home: "house.fill"
+            case .discovery: "safari.fill"
+            case .activity: "chart.bar.fill"
+            case .profile: "person.crop.circle.fill"
+            }
+        }
+    }
+}
+
+// MARK: chatbot launcher
+
+private struct SampleChatbotLauncher: View {
+    var body: some View {
+        ChatbotLauncher(
+            accessibilityLabel: "Open the GenericChatbot guide",
+            tint: .indigo
+        ) { close in
+            SampleChatbotView(close: close)
+        }
+    }
+}
+
+// MARK: chatbot view
+
+private struct SampleChatbotView: View {
+    var close: (() -> Void)?
+
+    init(close: (() -> Void)? = nil) {
+        self.close = close
+    }
+
+    var body: some View {
+        ChatbotView(
+            configuration: SampleChatbot.configuration,
+            provider: FoundationModelsChatProvider(),
+            knowledgeSource: SampleKnowledgeSource(),
+            theme: SampleChatbot.theme,
+            close: close
+        )
+    }
+}
+
+// MARK: tabs sample content
+
+private struct SampleTabContent: View {
+    let title: String
+    let message: String
+    let systemImage: String
+
+    var body: some View {
+        NavigationStack {
+            ContentUnavailableView(
+                title,
+                systemImage: systemImage,
+                description: Text(message)
+            )
+            .navigationTitle(title)
+        }
+    }
+}
+
+// MARK: chatbot configuration
+
+@MainActor
+private enum SampleChatbot {
+    static let configuration = ChatbotConfiguration(
+        title: "GenericChatbot Guide",
+        instructions: "Answer clearly using only the supplied GenericChatbot documentation.",
+        answerPolicy: .groundedOnly,
+        retrievalLimit: 1,
+        strings: ChatbotStrings(
+            emptyTitle: "Ask about GenericChatbot",
+            emptyMessage: "Learn how to integrate and customize the library in an iOS app.",
+            composerPlaceholder: "Ask about the library"
+        )
+    )
+
+    static let theme = ChatbotTheme(
+        accentColor: .indigo,
+        userBubbleColor: .indigo
+    )
+}
+
+// MARK: chatbot knowledge
+
 private struct SampleKnowledgeSource: ChatKnowledgeSource {
     func knowledge(for _: String, limit: Int) async throws -> [ChatKnowledgeItem] {
         guard limit > 0 else { return [] }
@@ -155,6 +344,16 @@ private struct SampleKnowledgeSource: ChatKnowledgeSource {
     }
 }
 
-#Preview {
-    ContentView()
+// MARK: previews
+
+#Preview("Floating assistant") {
+    FloatingAssistantExample()
+}
+
+#Preview("Assistant tab") {
+    AssistantTabExample()
+}
+
+#Preview("Tabs with floating assistant") {
+    TabsWithFloatingAssistantExample()
 }
