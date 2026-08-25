@@ -22,7 +22,7 @@ If Foundation Models are unavailable, the chatbot presents the library's normali
 
 ## Examples
 
-The implementation lives in `ios-chatbot-app/ios-chatbot-app/ContentView.swift` and includes three Xcode previews:
+`ContentView.swift` contains only the app's selected root example. The presentation examples live in `Examples/`, while reusable chatbot composition and knowledge retrieval live in `Chatbot/`. Each presentation example includes its own Xcode preview:
 
 - **Floating assistant:** The original landing screen with a chatbot launcher fixed to the bottom-trailing corner. This is the example shown when the app runs.
 - **Assistant tab:** A five-item tab bar with Home, Search, AI Assistant, Notifications, and Profile. The AI Assistant tab embeds `ChatbotView` directly instead of presenting it modally.
