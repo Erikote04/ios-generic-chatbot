@@ -36,7 +36,8 @@ The examples use:
 - `ChatbotView` directly as the content of a tab.
 - `ChatbotConfiguration` to define instructions, grounded-only answers, response-language behavior, strings, and retrieval behavior.
 - `FoundationModelsChatProvider` for Apple's on-device model.
-- `SampleKnowledgeSource` to provide app-owned context without retraining the model.
+- The bundled `Knowledge` articles containing the DocC integration guides and public API grouped by responsibility.
+- `SampleKnowledgeSource` to rank those articles for each question and provide only focused app-owned context without retraining the model or exhausting the model's context window.
 - `ChatbotTheme` to apply the sample's indigo accent.
 
 The essential presentation code is:
@@ -57,5 +58,7 @@ ChatbotLauncher(tint: .indigo) { close in
 ```
 
 Replace the sample instructions, strings, theme, and knowledge source with values and adapters owned by your app. See the [complete GenericChatbot documentation](https://erikote04.github.io/ios-generic-chatbot/documentation/genericchatbot/) for all configuration and extension points.
+
+The sample keeps the documentation as focused Markdown articles because headings, paragraphs, lists, and code fences make each source easy to maintain and retrieve. The knowledge source reads the articles, divides only oversized API references into bounded chunks, and supplies at most the three most relevant results. It never sends the complete documentation corpus for every question. Markdown improves structure and maintainability rather than changing the model's underlying knowledge.
 
 GenericChatbot detects the language of each user message on device by default, allowing the person to change languages without starting a new conversation. Short or ambiguous follow-ups retain the latest identifiable language. Use `.appLocale` or `.fixed(Locale(...))` when your product requires a stable response language.
