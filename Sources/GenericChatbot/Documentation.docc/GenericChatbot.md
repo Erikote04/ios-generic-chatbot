@@ -63,6 +63,7 @@ ChatbotLauncher { close in
 ### Presentation and storage
 
 - <doc:CustomizingPresentation>
+- <doc:MarkdownMessages>
 - <doc:ConversationPersistence>
 - ``ChatbotStyle``
 - ``DefaultChatbotStyle``

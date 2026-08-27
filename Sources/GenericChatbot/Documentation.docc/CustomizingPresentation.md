@@ -63,6 +63,9 @@ Custom slots receive presentation data and narrowly scoped actions. They must no
 
 - Keep interactive targets at least 44 points.
 - Preserve Dynamic Type and VoiceOver labels.
+- Keep message content selectable so people can copy model output and code. The default style enables selection automatically.
 - Expose send, cancel, retry, close, and new-conversation actions as buttons.
 - Don't communicate streaming, errors, or authorship using color alone.
 - Respect Reduce Motion when adding custom animation.
+
+See <doc:MarkdownMessages> for the default assistant-message formatting behavior and the responsibilities of a custom message row.

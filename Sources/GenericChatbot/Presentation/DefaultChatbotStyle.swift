@@ -42,9 +42,7 @@ public struct DefaultChatbotStyle: ChatbotStyle {
     /// - Returns: A bubble aligned for the message role.
     public func makeMessage(configuration: ChatbotMessageConfiguration) -> some View {
         VStack(alignment: configuration.message.role == .user ? .trailing : .leading, spacing: 8) {
-            Text(configuration.message.content)
-                .font(theme.messageFont)
-                .textSelection(.enabled)
+            messageContent(configuration.message)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 10)
                 .foregroundStyle(
@@ -52,6 +50,7 @@ public struct DefaultChatbotStyle: ChatbotStyle {
                         ? theme.userTextColor
                         : theme.assistantTextColor
                 )
+                .tint(theme.accentColor)
                 .background(
                     configuration.message.role == .user
                         ? theme.userBubbleColor
@@ -75,11 +74,7 @@ public struct DefaultChatbotStyle: ChatbotStyle {
             alignment: configuration.message.role == .user ? .trailing : .leading
         )
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(
-            configuration.message.role == .user
-                ? "You: \(configuration.message.content)"
-                : "Assistant: \(configuration.message.content)"
-        )
+        .accessibilityLabel(accessibilityLabel(for: configuration.message))
     }
 
     /// Creates the default source card.
@@ -197,6 +192,26 @@ public struct DefaultChatbotStyle: ChatbotStyle {
             .padding(.horizontal, 10)
             .padding(.vertical, 7)
             .background(theme.sourceBackgroundColor, in: .rect(cornerRadius: 10))
+    }
+
+    @ViewBuilder
+    private func messageContent(_ message: ChatMessage) -> some View {
+        if message.role == .assistant {
+            ChatbotMarkdownMessage(content: message.content, font: theme.messageFont)
+        } else {
+            Text(message.content)
+                .font(theme.messageFont)
+                .textSelection(.enabled)
+        }
+    }
+
+    private func accessibilityLabel(for message: ChatMessage) -> String {
+        switch message.role {
+        case .user:
+            "You: \(message.content)"
+        case .assistant:
+            "Assistant: \(ChatbotMarkdownParser.plainText(from: message.content))"
+        }
     }
 
     private func failureView(
