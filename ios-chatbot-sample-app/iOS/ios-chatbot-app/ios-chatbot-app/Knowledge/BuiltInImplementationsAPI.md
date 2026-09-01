@@ -22,7 +22,7 @@ public struct EmptyChatKnowledgeSource : GenericChatbot.ChatKnowledgeSource {
 ///
 /// The provider doesn't require connectivity after system model assets are ready.
 /// Always inspect ``availability()`` before presenting an enabled composer.
-@available(iOS 26.0, *)
+@available(iOS 26.0, macOS 26.0, *)
 public struct FoundationModelsChatProvider : GenericChatbot.ChatModelProvider {
 
     /// Creates an Apple Foundation Models provider.
