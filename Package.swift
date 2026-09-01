@@ -5,6 +5,7 @@ let package = Package(
     name: "GenericChatbot",
     platforms: [
         .iOS(.v26),
+        .macOS(.v26),
     ],
     products: [
         .library(

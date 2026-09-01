@@ -6,6 +6,9 @@ public enum ChatbotPresentationStyle: String, CaseIterable, Sendable {
     case sheet
 
     /// Present the chatbot in a full-screen cover.
+    ///
+    /// macOS presents a sheet because SwiftUI doesn't provide full-screen covers
+    /// on that platform.
     case fullScreenCover
 }
 
@@ -50,10 +53,17 @@ public struct ChatbotLauncher<Label: View, Content: View>: View {
                     content(dismiss)
                 }
         case .fullScreenCover:
+#if os(macOS)
+            launcherButton
+                .sheet(item: $activePresentation) { _ in
+                    content(dismiss)
+                }
+#else
             launcherButton
                 .fullScreenCover(item: $activePresentation) { _ in
                     content(dismiss)
                 }
+#endif
         }
     }
 
@@ -63,6 +73,7 @@ public struct ChatbotLauncher<Label: View, Content: View>: View {
         } label: {
             label
         }
+        .buttonStyle(.plain)
         .accessibilityLabel(accessibilityLabel)
     }
 
@@ -101,7 +112,7 @@ extension ChatbotLauncher where Label == DefaultChatbotLauncherLabel {
 /// The default round launcher label containing an SF Symbol.
 @MainActor
 public struct DefaultChatbotLauncherLabel: View {
-    /// The circular background color.
+    /// The circular glass tint.
     public var tint: Color
 
     /// Creates the default launcher label.
@@ -117,7 +128,10 @@ public struct DefaultChatbotLauncherLabel: View {
             .font(.title3)
             .foregroundStyle(.white)
             .frame(width: 56, height: 56)
-            .background(tint, in: Circle())
+            .glassEffect(
+                .regular.tint(tint).interactive(),
+                in: .circle
+            )
             .contentShape(Circle())
     }
 }

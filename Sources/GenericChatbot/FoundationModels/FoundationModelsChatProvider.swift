@@ -6,7 +6,7 @@ import NaturalLanguage
 ///
 /// The provider doesn't require connectivity after system model assets are ready.
 /// Always inspect ``availability()`` before presenting an enabled composer.
-@available(iOS 26.0, *)
+@available(iOS 26.0, macOS 26.0, *)
 public struct FoundationModelsChatProvider: ChatModelProvider {
     private let model: SystemLanguageModel
     private let options: GenerationOptions
@@ -143,7 +143,7 @@ public struct FoundationModelsChatProvider: ChatModelProvider {
     }
 }
 
-@available(iOS 26.0, *)
+@available(iOS 26.0, macOS 26.0, *)
 private actor FoundationModelsChatSession: ChatModelSession {
     private let model: SystemLanguageModel
     private let session: LanguageModelSession
@@ -391,7 +391,7 @@ enum FoundationModelsPromptBuilder {
     }
 }
 
-@available(iOS 26.0, *)
+@available(iOS 26.0, macOS 26.0, *)
 private actor FoundationModelsResponseIterator {
     private var iterator: LanguageModelSession.ResponseStream<String>.AsyncIterator
     private var sources: [ChatSource]
@@ -464,7 +464,7 @@ private actor FoundationModelsResponseIterator {
 
 }
 
-@available(iOS 26.0, *)
+@available(iOS 26.0, macOS 26.0, *)
 enum FoundationModelsErrorMapper {
     static func map(_ error: LanguageModelSession.GenerationError) -> ChatbotError {
         switch error {

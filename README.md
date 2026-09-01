@@ -1,14 +1,15 @@
 # GenericChatbot
 
-`GenericChatbot` is a domain-neutral SwiftUI chatbot component for iOS 26 and later. It ships with an Apple Foundation Models provider and protocol-based extension points for any local or remote model, application knowledge source, history store, diagnostics destination, and visual style.
+`GenericChatbot` is a domain-neutral SwiftUI chatbot component for iOS 26 and macOS 26 or later. It ships with an Apple Foundation Models provider and protocol-based extension points for any local or remote model, application knowledge source, history store, diagnostics destination, and visual style.
 
 ## Requirements
 
 - iOS 26+
+- macOS 26+
 - Xcode 26+
 - Swift 6.2+
 
-Apple's provider requires an Apple Intelligence-capable device with Apple Intelligence enabled and model assets ready. Remote providers and knowledge sources may additionally require connectivity.
+Apple's provider requires an Apple Intelligence-capable iPhone, iPad, or Mac with Apple Intelligence enabled and model assets ready. Remote providers and knowledge sources may additionally require connectivity.
 
 ## Installation
 
@@ -69,6 +70,10 @@ struct AssistantButton: View {
 ```
 
 The default launcher is a round SF Symbol button. `ChatbotView` can also be embedded directly, and `ChatbotStyle` allows every visual slot to be replaced without moving model or persistence behavior into the UI.
+
+## macOS support
+
+The same `ChatbotView` and `ChatbotLauncher` APIs run on macOS and adapt to a resizable SwiftUI window. The navigation-bar presentation uses an adaptive top header with Liquid Glass actions. Because SwiftUI doesn't provide full-screen covers on macOS, requesting `.fullScreenCover` from `ChatbotLauncher` presents a sheet there while retaining the full-screen presentation on iOS.
 
 ## Response language
 

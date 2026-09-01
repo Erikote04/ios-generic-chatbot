@@ -1,10 +1,12 @@
 # ``GenericChatbot``
 
-Build a reusable, configurable chatbot for any SwiftUI application.
+Build a reusable, configurable chatbot for iOS and macOS SwiftUI applications.
 
 ## Overview
 
 GenericChatbot separates conversation presentation from model execution, application knowledge, persistence, and diagnostics. Use Apple's on-device Foundation Models implementation or inject any provider that conforms to ``ChatModelProvider``.
+
+The package supports iOS 26 and macOS 26 or later. Its SwiftUI presentation adapts to resizable Mac windows while keeping the same configuration, provider, knowledge, persistence, and style APIs across both platforms.
 
 The package never assumes what kind of application integrates it. A host controls the assistant's instructions, retrieves its own relevant content through ``ChatKnowledgeSource``, selects grounded or general answers, and replaces every visual slot with ``ChatbotStyle``.
 

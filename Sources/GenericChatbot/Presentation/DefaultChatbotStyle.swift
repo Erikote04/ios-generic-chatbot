@@ -111,49 +111,11 @@ public struct DefaultChatbotStyle: ChatbotStyle {
     /// - Parameter configuration: Draft binding, activity, and composer actions.
     /// - Returns: A multiline composer with send or cancel controls.
     public func makeComposer(configuration: ChatbotComposerConfiguration) -> some View {
-        GlassEffectContainer(spacing: 10) {
-            HStack(alignment: .bottom, spacing: 10) {
-                TextField(
-                    configuration.placeholder,
-                    text: configuration.text,
-                    axis: .vertical
-                )
-                .lineLimit(1...6)
-                .submitLabel(.send)
-                .onSubmit(configuration.send)
-                .tint(theme.accentColor)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 11)
-                .frame(minHeight: 44)
-                .glassEffect(
-                    .regular.interactive(),
-                    in: .rect(cornerRadius: 22)
-                )
-
-                if configuration.activity == .responding {
-                    Button(strings.cancel, systemImage: "stop.fill", action: configuration.cancel)
-                        .labelStyle(.iconOnly)
-                        .font(.body.weight(.semibold))
-                        .frame(width: 44, height: 44)
-                        .buttonStyle(.glassProminent)
-                        .buttonBorderShape(.circle)
-                        .tint(theme.accentColor)
-                        .accessibilityLabel(strings.cancel)
-                } else {
-                    Button(strings.send, systemImage: "arrow.up", action: configuration.send)
-                        .labelStyle(.iconOnly)
-                        .font(.body.weight(.semibold))
-                        .frame(width: 44, height: 44)
-                        .buttonStyle(.glassProminent)
-                        .buttonBorderShape(.circle)
-                        .tint(theme.accentColor)
-                        .disabled(!configuration.isSendEnabled)
-                        .accessibilityLabel(strings.send)
-                }
-            }
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 12)
+        DefaultChatbotComposer(
+            configuration: configuration,
+            theme: theme,
+            strings: strings
+        )
     }
 
     /// Creates the default model-availability state.
@@ -248,9 +210,77 @@ public struct DefaultChatbotStyle: ChatbotStyle {
         case .guardrailViolation, .refusal:
             "hand.raised.fill"
         case .modelUnavailable(.deviceNotEligible):
+#if os(macOS)
+            "macbook.slash"
+#else
             "iphone.slash"
+#endif
         default:
             "exclamationmark.triangle.fill"
+        }
+    }
+}
+
+@MainActor
+private struct DefaultChatbotComposer: View {
+    let configuration: ChatbotComposerConfiguration
+    let theme: ChatbotTheme
+    let strings: ChatbotStrings
+
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        GlassEffectContainer(spacing: 8) {
+            HStack(alignment: .bottom, spacing: 8) {
+                TextField(
+                    configuration.placeholder,
+                    text: configuration.text,
+                    axis: .vertical
+                )
+                .lineLimit(1...6)
+                .submitLabel(.send)
+                .onSubmit(configuration.send)
+                .tint(theme.accentColor)
+                .textFieldStyle(.plain)
+                .focused($isFocused)
+                .focusEffectDisabled()
+                .padding(.leading, 16)
+                .padding(.vertical, 11)
+                .frame(minHeight: 44)
+
+                if configuration.activity == .responding {
+                    Button(strings.cancel, systemImage: "stop.fill", action: configuration.cancel)
+                        .labelStyle(.iconOnly)
+                        .font(.body.weight(.semibold))
+                        .frame(width: 44, height: 44)
+                        .buttonStyle(.glassProminent)
+                        .buttonBorderShape(.circle)
+                        .tint(theme.accentColor)
+                        .accessibilityLabel(strings.cancel)
+                } else {
+                    Button(strings.send, systemImage: "arrow.up", action: configuration.send)
+                        .labelStyle(.iconOnly)
+                        .font(.body.weight(.semibold))
+                        .frame(width: 44, height: 44)
+                        .buttonStyle(.glassProminent)
+                        .buttonBorderShape(.circle)
+                        .tint(theme.accentColor)
+                        .disabled(!configuration.isSendEnabled)
+                        .accessibilityLabel(strings.send)
+                }
+            }
+            .padding(.trailing, 4)
+            .glassEffect(
+                .regular.interactive(),
+                in: .capsule
+            )
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+        .defaultFocus($isFocused, true)
+        .task {
+            await Task.yield()
+            isFocused = true
         }
     }
 }

@@ -4,11 +4,11 @@ Add a round launcher button and configure a model in a few lines.
 
 ## Add the package
 
-Add this repository as a Swift Package dependency and link the `GenericChatbot` product to an iOS 26-or-later target.
+Add this repository as a Swift Package dependency and link the `GenericChatbot` product to an iOS 26-or-later or macOS 26-or-later target.
 
 ## Present the default chatbot
 
-Use ``ChatbotLauncher`` when the package should own modal presentation. Its content closure receives the correct close action for either a sheet or full-screen cover.
+Use ``ChatbotLauncher`` when the package should own modal presentation. Its content closure receives the correct close action for either a sheet or full-screen cover. macOS uses a native sheet when `.fullScreenCover` is requested because SwiftUI doesn't make full-screen covers available there.
 
 ```swift
 import GenericChatbot
@@ -37,6 +37,8 @@ struct ContentView: View {
 ```
 
 The Foundation Models provider checks whether the device supports Apple Intelligence, whether it is enabled, and whether model assets are ready. The composer remains disabled until the model is available.
+
+On macOS, the same view expands and contracts with its containing window and places close and new-conversation actions in an adaptive top header. You can also embed ``ChatbotView`` directly in a window, navigation destination, tab, or split-view detail.
 
 The default ``ChatbotResponseLanguage/matchingUserInput(fallback:)`` behavior answers in the language of the person's latest message and follows language changes during the conversation. See <doc:LanguagesAndLocales> to use the app locale or require a developer-selected locale.
 

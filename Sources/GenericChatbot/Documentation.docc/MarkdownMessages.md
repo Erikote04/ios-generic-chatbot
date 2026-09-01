@@ -61,7 +61,7 @@ Every ``ChatModelProvider`` still returns ordinary strings through ``ChatRespons
 
 ## Selection and copying
 
-The default style enables native text selection for user and assistant messages, including inline Markdown and code blocks. On iOS, touch and hold the relevant text to show the system copy menu. Selection behavior follows the platform.
+The default style enables native text selection for user and assistant messages, including inline Markdown and code blocks. Touch and hold on iOS or drag across text on macOS to use the platform's standard copy interaction.
 
 ## Custom styles
 

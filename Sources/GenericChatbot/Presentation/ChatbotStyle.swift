@@ -8,8 +8,8 @@ public enum ChatbotHeaderPresentation: Sendable {
 
     /// Present the title and actions in a native navigation toolbar.
     ///
-    /// On iOS 26, the system automatically gives toolbar controls Liquid Glass
-    /// styling and coordinates them with the scroll view's edge effect.
+    /// On supported Apple platforms, the system automatically gives toolbar
+    /// controls Liquid Glass styling and coordinates them with scroll content.
     case navigationBar
 }
 

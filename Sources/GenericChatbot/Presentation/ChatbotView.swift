@@ -57,15 +57,22 @@ public struct ChatbotView<Style: ChatbotStyle>: View {
             case .inline:
                 chatbotContent(showsInlineHeader: true)
             case .navigationBar:
+#if os(macOS)
+                chatbotContent(showsInlineHeader: false)
+                    .safeAreaInset(edge: .top, spacing: 0) {
+                        macOSHeader
+                    }
+                    .tint(style.navigationTint)
+#else
                 NavigationStack {
                     chatbotContent(showsInlineHeader: false)
-                        .navigationTitle(viewModel.configuration.title)
-                        .navigationBarTitleDisplayMode(.inline)
+                        .chatbotNavigationTitle(viewModel.configuration.title)
                         .toolbar {
                             navigationToolbar
                         }
                 }
                 .tint(style.navigationTint)
+#endif
             }
         }
         .task {
@@ -102,6 +109,56 @@ public struct ChatbotView<Style: ChatbotStyle>: View {
         }
     }
 
+#if os(macOS)
+    private var macOSHeader: some View {
+        ZStack {
+            Text(viewModel.configuration.title)
+                .font(.headline)
+                .lineLimit(1)
+
+            HStack {
+                if let close {
+                    macOSHeaderButton(
+                        viewModel.configuration.strings.close,
+                        systemImage: "xmark",
+                        action: close
+                    )
+                } else {
+                    Color.clear
+                        .frame(width: 44, height: 44)
+                        .accessibilityHidden(true)
+                }
+
+                Spacer()
+
+                macOSHeaderButton(
+                    viewModel.configuration.strings.newConversation,
+                    systemImage: "square.and.pencil",
+                    action: viewModel.startNewConversation
+                )
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+    }
+
+    private func macOSHeaderButton(
+        _ title: String,
+        systemImage: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(title, systemImage: systemImage, action: action)
+            .labelStyle(.iconOnly)
+            .font(.body.weight(.semibold))
+            .frame(width: 44, height: 44)
+            .buttonStyle(.glass)
+            .buttonBorderShape(.circle)
+            .accessibilityLabel(title)
+    }
+#endif
+
+#if !os(macOS)
     @ToolbarContentBuilder
     private var navigationToolbar: some ToolbarContent {
         if let close {
@@ -126,6 +183,7 @@ public struct ChatbotView<Style: ChatbotStyle>: View {
             .accessibilityLabel(viewModel.configuration.strings.newConversation)
         }
     }
+#endif
 
     @ViewBuilder
     private var conversationContent: some View {
@@ -167,6 +225,18 @@ public struct ChatbotView<Style: ChatbotStyle>: View {
         } else {
             viewModel.perform(action)
         }
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func chatbotNavigationTitle(_ title: String) -> some View {
+#if os(iOS)
+        navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+#else
+        self
+#endif
     }
 }
 
