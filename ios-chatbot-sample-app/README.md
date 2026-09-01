@@ -2,21 +2,34 @@
 
 A small SwiftUI app showing how to add an app-aware assistant with `GenericChatbot`. The examples keep integration at the view boundary and demonstrate configuration, custom strings, theming, grounded answers, an application-owned knowledge source, and multiple presentation patterns.
 
+## Platform samples
+
+- `iOS/` contains the current iPhone and iPad sample project.
+- `macOS/` contains the native Mac sample with the same assistant configuration, indigo theme, interface copy, and bundled knowledge as the iOS app.
+
 ## Requirements
 
 - iOS 26 or later
+- macOS 26 or later
 - Xcode 26 or later
 - Swift 6.2 or later
-- An Apple Intelligence-capable device with Apple Intelligence enabled and the on-device model available
+- An Apple Intelligence-capable iPhone, iPad, or Mac with Apple Intelligence enabled and the on-device model available
 
-## Run the sample
+## Run the iOS sample
 
-1. Open `ios-chatbot-app/ios-chatbot-app.xcodeproj` in Xcode.
+1. Open `iOS/ios-chatbot-app/ios-chatbot-app.xcodeproj` in Xcode.
 2. Wait for Swift Package Manager to resolve `GenericChatbot`.
 3. Select a compatible device and run the `ios-chatbot-app` scheme.
 4. Tap the assistant button in the bottom-trailing corner and try one of the suggested questions.
 
-> **Recommendation:** Test this sample—and any chatbot you build with GenericChatbot—on a real Apple Intelligence-capable device. Foundation Models may be unavailable or behave inconsistently in the simulator, so simulator results might not accurately represent the experience on a supported device.
+## Run the macOS sample
+
+1. Open `macOS/ios-chatbot-app/ios-chatbot-app.xcodeproj` in Xcode.
+2. Add `https://github.com/Erikote04/ios-generic-chatbot.git` as a Swift Package dependency and link the `GenericChatbot` product to the app target.
+3. Select **My Mac** and run the `ios-chatbot-app` scheme.
+4. Select the assistant button in the bottom-trailing corner and try one of the suggested questions.
+
+> **Recommendation:** Test this sample—and any chatbot you build with GenericChatbot—on Apple Intelligence-capable hardware. Foundation Models may be unavailable or behave inconsistently in the iOS simulator, so simulator results might not accurately represent the experience on a supported device.
 
 If Foundation Models are unavailable, the chatbot presents the library's normalized availability error instead of starting a conversation.
 
